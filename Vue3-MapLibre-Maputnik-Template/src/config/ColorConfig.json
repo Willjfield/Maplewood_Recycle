@@ -1,0 +1,22 @@
+{
+	"name": "colorConfig",
+    "Percent":[
+        {"stop":0.1,"color":"rgb(255,247,236)"},
+        {"stop":0.25,"color":"rgb(254,232,200)"},
+        {"stop":0.33,"color":"rgb(253,212,158)"},
+        {"stop":0.5,"color":"rgb(253,187,132)"},
+        {"stop":0.66,"color":"rgb(252,141,89)"},
+        {"stop":0.75,"color":"rgb(239,101,72)"},
+        {"stop":0.9,"color":"rgb(215,48,31)"},
+        {"stop":1,"color":"rgb(179,0,0)"},
+        {"stop":-1,"color":"rgb(127,0,0)"}
+    ],
+    "Index":[
+        {"stop":2000,"color":"rgb(255,255,212)"},
+        {"stop":2500,"color":"rgb(254,227,145)"},
+        {"stop":3000,"color":"rgb(254,196,79)"},
+        {"stop":4000,"color":"rgb(254,153,41)"},
+        {"stop":5000,"color":"rgb(217,95,14)"},
+        {"stop":9200,"color":"rgb(153,52,4)"}
+    ]
+}

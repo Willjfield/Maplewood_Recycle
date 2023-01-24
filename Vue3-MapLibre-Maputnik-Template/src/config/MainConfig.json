@@ -1,0 +1,51 @@
+{
+	"name": "mainConfig",
+	"api": {
+		"hosts": {
+			"cuny": {
+				"DEV": "https://dev.urbanresearchmaps.org/NYC-Redistrict-API/v1",
+				"LOCAL": "https://dev.urbanresearchmaps.org/NYC-Redistrict-API/v1",
+				"PROD": "https://www.urbanresearchmaps.org/NYC-Redistrict-API/v1"
+			},
+			"cunyCommon":{
+				"DEV": "https://dev.urbanresearchmaps.org/Common-API/v1",
+				"LOCAL": "https://dev.urbanresearchmaps.org/Common-API/v1",
+				"PROD": "https://www.urbanresearchmaps.org/Common-API/v1"
+			}
+		},
+		"keys": {
+			"maptiler": "L78m21fKcm5U9th78MBq"
+		}
+	},
+	"environments": [
+		[
+			"LOCAL",
+			"localhost"
+		],
+		[
+			"DEV",
+			"dev.urbanresearchmaps.org"
+		],
+		[
+			"PROD",
+			"www.urbanresearchmaps.org"
+		]
+	],
+	"mapConfig": {
+		"container": "main-map",
+		"style": "style.json",
+		"center": [
+			-73.7818,
+			40.7013
+		],
+		"zoom": 9.4,
+		"hash": "&map",
+		"logoPosition": "bottom-right",
+		"attributionControl": true,
+		"preserveDrawingBuffer": true,
+		"antialias": true,
+		"baselayers": []
+	},
+	"tables": {},
+	"defaultLayers": []
+}
