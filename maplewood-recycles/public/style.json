@@ -387,7 +387,9 @@
           6,
           "#f4c46e",
           "white"
-        ]
+        ],
+        "fill-outline-color": "rgb(1, 1, 1)",
+        "fill-antialias": true
       }
     },
     {
@@ -3299,6 +3301,15 @@
       }
     },
     {
+      "id": "maplewood-zone-outline",
+      "type": "line",
+      "source": "mpwd-zones",
+      "paint": {
+        "line-opacity": 0.25,
+        "line-width": 2
+      }
+    },
+    {
       "id": "boundary_3",
       "type": "line",
       "source": "openmaptiles",
@@ -3622,7 +3633,8 @@
           0,
           0.6
         ],
-        "text-size": 12
+        "text-size": 12,
+        "visibility": "visible"
       },
       "paint": {
         "text-color": "#666",
@@ -3698,7 +3710,8 @@
               13
             ]
           ]
-        }
+        },
+        "visibility": "visible"
       },
       "paint": {
         "text-color": "#765",
@@ -3747,7 +3760,8 @@
         ],
         "text-rotation-alignment": "viewport",
         "text-size": 10,
-        "icon-size": 0.8
+        "icon-size": 0.8,
+        "visibility": "none"
       }
     },
     {
@@ -3788,7 +3802,8 @@
             ]
           ]
         },
-        "text-transform": "uppercase"
+        "text-transform": "uppercase",
+        "visibility": "none"
       },
       "paint": {
         "text-color": "#633",
@@ -3827,7 +3842,8 @@
               22
             ]
           ]
-        }
+        },
+        "visibility": "none"
       },
       "paint": {
         "text-color": "#333",
@@ -3846,6 +3862,11 @@
           "==",
           "class",
           "town"
+        ],
+        [
+          "==",
+          "name",
+          "Maplewood"
         ]
       ],
       "layout": {
@@ -3865,7 +3886,7 @@
         "text-anchor": "bottom",
         "text-field": "{name_en}",
         "text-font": [
-          "Roboto Regular"
+          "Roboto Bold"
         ],
         "text-max-width": 8,
         "text-offset": [
@@ -3877,17 +3898,21 @@
           "stops": [
             [
               7,
-              12
+              16
             ],
             [
               11,
-              16
+              20
             ]
           ]
-        }
+        },
+        "visibility": "visible",
+        "icon-ignore-placement": false,
+        "icon-allow-overlap": false,
+        "icon-optional": false
       },
       "paint": {
-        "text-color": "#333",
+        "text-color": "rgba(90, 89, 89, 1)",
         "text-halo-color": "rgba(255,255,255,0.8)",
         "text-halo-width": 1.2
       }
@@ -3944,7 +3969,8 @@
           ]
         },
         "icon-allow-overlap": true,
-        "icon-optional": false
+        "icon-optional": false,
+        "visibility": "none"
       },
       "paint": {
         "text-color": "#333",
@@ -4152,6 +4178,24 @@
       "paint": {
         "text-color": "#633",
         "text-halo-color": "rgba(255,255,255,0.7)",
+        "text-halo-width": 1
+      }
+    },
+    {
+      "id": "maplewood-zone-labels",
+      "type": "symbol",
+      "source": "mpwd-zones",
+      "layout": {
+        "text-field": "ZONE {id}",
+        "text-font": [
+          "Open Sans Bold",
+          "Arial Unicode MS Bold"
+        ],
+        "text-size": 12,
+        "text-ignore-placement": false
+      },
+      "paint": {
+        "text-halo-color": "rgba(247, 242, 242, 1)",
         "text-halo-width": 1
       }
     }

@@ -1,15 +1,27 @@
 <template>
   <div class="title">
-  <h2>Maplewood Recycling</h2>
+  <h2 style="color:#44744c;">Maplewood Recycling</h2>
   <h4>When? What? How?</h4>
 </div>
   <div>
     <div id="main-map"></div>
-    <v-sheet>
-      <v-sheet ><div id="geocoder" class="geocoder-container mx-auto"></div></v-sheet>
-      <!-- <div v-show="this.selectedAddress.address">{{ this.selectedAddress['place_name_en-US'] }}</div> -->
-      <span v-show="zone > 0">You are in Zone {{ zone }}</span>
-      Your next collection is 
+    <v-sheet ><div id="geocoder" class="geocoder-container mx-auto"></div></v-sheet>
+
+     <v-sheet class="side-info">
+      <div v-show="zone < 0">
+        Starting in January 2023, recycling materials will need to be separated into two categories for two distinct pickups on alternating weeks. One week’s pickup will be exclusively for Fibers (cardboard, paper) and the following week’s pickup will be for Commingled (plastic, glass, and metal containers). Cross-contaminated recycling loads or materials put out on the wrong week will not be picked up. For more information on what materials can and cannot be recycled, please reference the FAQ section at the bottom of this page. To download a copy of the recycling guide, <a href="https://www.maplewoodnj.gov/home/showpublisheddocument/984/638059490986930000">click here</a>.
+      </div>
+      <span v-show="zone > 0">
+        <v-btn
+        class="reset-btn"
+        flat
+        variant="outlined"
+        rounded
+        @click="reset()"
+      > Reset</v-btn>
+      <br>
+      You are in Zone {{ zone }} <br>
+      Your next collection is </span>
       <span style="font-weight:bold;" v-show="nextCollectionWeek === nextWeek && !collectionIsToday">next {{ daysOfWeek[collectionDays[zone]] }}</span>
       <span style="font-weight:bold;" v-show="nextCollectionWeek === thisWeek && !collectionIsToday">this {{ daysOfWeek[collectionDays[zone]] }}</span>
       <span v-show="collectionIsToday">today</span>.
@@ -142,7 +154,7 @@ export default {
     .on('clear',()=>{
       this.selectedAddress={};
     })
-    .addTo('#geocoder')
+    .addTo("#geocoder")
     
     this.map.addControl(new ml.NavigationControl(), "bottom-left");
     if (this.hoverActive) {
@@ -150,31 +162,44 @@ export default {
        // console.log(e.features)
         if (e.features && e.features.length > 0 && self.geoidHover !== e.features[0].properties.id) {
           self.geoidHover = e.features[0].properties.id;
-          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.geoidHover], .85, .5])
+          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.geoidHover], .85,["==", ["get", "id"], self.clickedId], .85, .5])
+          self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.geoidHover],4, ["==", ["get", "id"], self.clickedId],4, 2])
+
         }
       });
 
       this.map.on('mouseleave', 'maplewood-zones', (e) => {
         self.geoidHover = ''
+        self.map.setPaintProperty('maplewood-zone-outline', 'line-width',2)
         self.map.setPaintProperty('maplewood-zones', 'fill-opacity', .75)
       });
     }
-    // this.map.on('click', 'tracts', (e) => {
-    //   if (e.features && e.features.length > 0) {
+    this.map.on('click', 'maplewood-zones', (e) => {
+      if (e.features && e.features.length > 0) {
+        if(this.marker) {
+        this.marker.remove();
+        this.marker = null;
+      }
 
-    //   } else {
-    //     // self.map.setPaintProperty('tract-outline','line-width',1)
-    //     // self.map.setPaintProperty('tract-outline','line-opacity',.2)
-    //     // self.map.setPaintProperty('tract-outline','line-color',"black")
-
-    //     //   self.selectedData = null
-    //     //   self.clickedId = null
-    //     //   self.searching = false
-    //   }
-    // });
+        self.setFromLngLat(e.lngLat.lng,e.lngLat.lat)
+       // self.clickedId = e.features[0].properties.id;
+          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.clickedId], .85, .5])
+          self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.clickedId], 4, 2])
+      } else {
+        self.clickedId = ''
+        self.map.setPaintProperty('maplewood-zone-outline', 'line-width',2)
+        self.map.setPaintProperty('maplewood-zones', 'fill-opacity', .75)
+      }
+    });
 
   },
   methods: {
+    reset(){
+      this.zone=-1
+      this.nextCollectionWeek = false;
+      this.collectionIsToday = false;
+      this.collectionType = ""
+    },
     getColor(val, type) {
       const scale = this.dataManager.colorConfig[type];
       for (let c = 0; c < scale.length; c++) {
@@ -197,20 +222,10 @@ export default {
 
       this.map.setPaintProperty("tracts", "fill-color", matchExpression);
     },
-  },
-  watch: {
-    model(_var) {
-
-    },
-    selectedAddress(_val){
-      if(this.marker) {
-        this.marker.remove();
-        this.marker = null;
-      }
-
+    setFromLngLat(lng,lat){
       maplewood.features.forEach((f)=>{
         let poly = polygon(f.geometry.coordinates[0]);
-        if(bpp([_val.center[0], _val.center[1]], poly)){
+        if(bpp([lng, lat], poly)){
           this.zone = f.properties.id;
         }
       });
@@ -223,8 +238,28 @@ export default {
       this.marker = new ml.Marker({
       color: "#FFFFFF",
       draggable: true
-      }).setLngLat([_val.center[0], _val.center[1]])
+      }).setLngLat([lng, lat])
       .addTo(this.map);
+
+      this.map.flyTo({
+      // These options control the ending camera position: centered at
+      // the target, at zoom level 9, and north up.
+      center: [lng,lat],
+      zoom: 16})
+    
+    }
+  },
+  watch: {
+    model(_var) {
+
+    },
+    selectedAddress(_val){
+      if(this.marker) {
+        this.marker.remove();
+        this.marker = null;
+      }
+
+      this.setFromLngLat(_val.center[0], _val.center[1])
     }
   },
 };
@@ -243,10 +278,15 @@ export default {
 
 #main-map {
   position: absolute;
-  top: 34%;
+  top: 10%;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  left: 33%;
+  right: 0%;
+  z-index: -1;
+}
+
+#main-map div.maplibregl-canvas-container.mapboxgl-canvas-container{
+  cursor: crosshair;
 }
 
 .logo {
@@ -287,15 +327,31 @@ export default {
 }
 
 .geocoder-container{
-  width: 50%;
+  float: right;
+    margin: 5px;
 }
 
-.geocoder-container .mapboxgl-ctrl-geocoder.mapboxgl-ctrl{
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl{
   width: 100%;
-  margin: 0 auto;
+    min-width: 355px;
+    margin: 5px;
 }
 
 .title{
   text-align: center;
+  background: white;
+}
+
+.side-info{
+  position: absolute;
+    top: 50px;
+    bottom: 0;
+    padding: 40px;
+    width: 33%;
+    overflow-y: scroll;
+}
+
+.reset-btn{
+  float: right;
 }
 </style>

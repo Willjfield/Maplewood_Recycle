@@ -1,18 +1,7 @@
 {
 	"name": "mainConfig",
 	"api": {
-		"hosts": {
-			"cuny": {
-				"DEV": "https://dev.urbanresearchmaps.org/NYC-Redistrict-API/v1",
-				"LOCAL": "https://dev.urbanresearchmaps.org/NYC-Redistrict-API/v1",
-				"PROD": "https://www.urbanresearchmaps.org/NYC-Redistrict-API/v1"
-			},
-			"cunyCommon":{
-				"DEV": "https://dev.urbanresearchmaps.org/Common-API/v1",
-				"LOCAL": "https://dev.urbanresearchmaps.org/Common-API/v1",
-				"PROD": "https://www.urbanresearchmaps.org/Common-API/v1"
-			}
-		},
+		"hosts": {},
 		"keys": {
 			"maptiler": "S5ckYmY9F8cXqKTHBLHV",
 			"mapbox":"pk.eyJ1Ijoid2lqZmkiLCJhIjoiY2xhMm8xaTcxMGJtMTNvb2NkbWhnbWFvcSJ9.roQ_naZk3TufzMGNOOgHIA"
@@ -39,7 +28,7 @@
 			-74.2731,
 			40.73641
 		],
-		"zoom": 12.2,
+		"zoom": 12.54,
 		"hash": "&map",
 		"logoPosition": "bottom-right",
 		"attributionControl": true,
