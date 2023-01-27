@@ -7,10 +7,5 @@ export default defineConfig({
   server: {
     port: 8080,
   },
-  publicPath: "./",
-  build:{
-    outDir: process.env.VUE_APP_ENV === 'PROD'
-    ? 'build-prod'
-    : 'build-dev'
-  }
+  publicPath: "./"
 })
