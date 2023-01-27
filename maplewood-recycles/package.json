@@ -10,12 +10,6 @@
     "maputnik-win": ".\\maputnik\\maputnik-windows\\maputnik.exe --file .\\public\\style.json",
     "maputnik-mac": "./maputnik/maputnik-mac/maputnik --file ./public/style.json",
     "maputnik-lin": "./maputnik/maputnik-linux/maputnik --file ./public/style.json",
-    "build-for-dev": "set VUE_APP_ENV=DEV&&npm run build -- --mode dev",
-    "build-for-prod": "set VUE_APP_ENV=PROD&&npm run build -- --mode prod",
-    "deploy-dev": "./deploy-scripts/deploy-dev.bat",
-    "deploy-dev-unix": "./deploy-scripts/deploy-dev.sh",
-    "deploy-prod": "./deploy-scripts/deploy-prod.bat",
-    "deploy-prod-unix": "./deploy-scripts/deploy-prod.sh",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
