@@ -14,7 +14,8 @@
 			}
 		},
 		"keys": {
-			"maptiler": "L78m21fKcm5U9th78MBq"
+			"maptiler": "S5ckYmY9F8cXqKTHBLHV",
+			"mapbox":"pk.eyJ1Ijoid2lqZmkiLCJhIjoiY2xhMm8xaTcxMGJtMTNvb2NkbWhnbWFvcSJ9.roQ_naZk3TufzMGNOOgHIA"
 		}
 	},
 	"environments": [
@@ -35,10 +36,10 @@
 		"container": "main-map",
 		"style": "style.json",
 		"center": [
-			-73.7818,
-			40.7013
+			-74.2731,
+			40.73641
 		],
-		"zoom": 9.4,
+		"zoom": 12.2,
 		"hash": "&map",
 		"logoPosition": "bottom-right",
 		"attributionControl": true,

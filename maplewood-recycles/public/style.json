@@ -18,6 +18,10 @@
         "https://klokantech.github.io/naturalearthtiles/tiles/natural_earth_2_shaded_relief.raster/{z}/{x}/{y}.png"
       ],
       "type": "raster"
+    },
+    "mpwd-zones": {
+      "type": "geojson",
+      "data": "https://gist.githubusercontent.com/Willjfield/12464b6bee6c21d40da3feb4bd0c42ca/raw/3c4a8cbfaab2198e6e00a6e22cc7ef83e98cb571/Maplewood-Zones.json"
     }
   },
   "sprite": "https://maputnik.github.io/osm-liberty/sprites/osm-liberty",
@@ -356,6 +360,34 @@
       ],
       "paint": {
         "fill-color": "rgba(247, 239, 195, 1)"
+      }
+    },
+    {
+      "id": "maplewood-zones",
+      "type": "fill",
+      "source": "mpwd-zones",
+      "paint": {
+        "fill-opacity": 0.75,
+        "fill-color": [
+          "match",
+          [
+            "get",
+            "id"
+          ],
+          1,
+          "#73b072",
+          2,
+          "#93dcf0",
+          3,
+          "#b6f1df",
+          4,
+          "#edc5fa",
+          5,
+          "#f1e2bb",
+          6,
+          "#f4c46e",
+          "white"
+        ]
       }
     },
     {
