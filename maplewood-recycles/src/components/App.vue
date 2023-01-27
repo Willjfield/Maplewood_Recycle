@@ -1,55 +1,85 @@
 <template>
   <div class="title">
-  <h2 style="color:#44744c;">Maplewood Recycling</h2>
-  <h4>When? What? How?</h4>
-</div>
+    <h2 style="color:#44744c;">Maplewood Recycling</h2>
+    <!-- <h4>When? What? How?</h4> -->
+  </div>
   <div>
-    <div id="main-map"></div>
-    <v-sheet ><div id="geocoder" class="geocoder-container mx-auto"></div></v-sheet>
-
-     <v-sheet class="side-info">
-      <div v-show="zone < 0">
-        Starting in January 2023, recycling materials will need to be separated into two categories for two distinct pickups on alternating weeks. One week’s pickup will be exclusively for Fibers (cardboard, paper) and the following week’s pickup will be for Commingled (plastic, glass, and metal containers). Cross-contaminated recycling loads or materials put out on the wrong week will not be picked up. For more information on what materials can and cannot be recycled, please reference the FAQ section at the bottom of this page. To download a copy of the recycling guide, <a href="https://www.maplewoodnj.gov/home/showpublisheddocument/984/638059490986930000">click here</a>.
+    <div id="main-map">
+      <div v-show="geoidHover > -1" id="hover-popup">
+        <span class="hover-note"> You're hovered over zone {{ geoidHover }}</span>
+        <br>
+        Regular Pickup Day: {{ daysOfWeek[collectionDays[geoidHover]] }}
+        <div class="small-hover-note">Click the map, enter address in the box, or geolocate for more info</div>
       </div>
-      <span v-show="zone > 0">
-        <v-btn
-        class="reset-btn"
-        flat
-        variant="outlined"
-        rounded
-        @click="reset()"
-      > Reset</v-btn>
-      <br>
-      You are in Zone {{ zone }} <br>
-      Your next collection is </span>
-      <span style="font-weight:bold;" v-show="nextCollectionWeek === nextWeek && !collectionIsToday">next {{ daysOfWeek[collectionDays[zone]] }}</span>
-      <span style="font-weight:bold;" v-show="nextCollectionWeek === thisWeek && !collectionIsToday">this {{ daysOfWeek[collectionDays[zone]] }}</span>
-      <span v-show="collectionIsToday">today</span>.
-      <div v-show="collectionType === 'F'">
-      It is a <b>FIBER</b> week
-      <h4>Cardboard & Paper</h4>
-      <ul>
-        <li>Corrugated Cardboard (Flattened no packing materials)</li>
-        <li>Boxboard (Flattened cereal boxes etc)</li>
-        <li>Paper Bags</li>
-        <li>Junk Mail (Including window envelopes)</li>
-        <li>Office Paper</li>
-        <li>Newspapers & Magazines</li>
-        <li>Only Corrugated Brown Pizza Boxes (No grease. Food & liner removed)</li>
-      </ul>
     </div>
-    <div v-show="collectionType === 'C'">
-      It is a <b>COMMINGLED</b> week
-      <h4>Glass, Metal & Plastic</h4>
-      <ul>
-        <li>#1, 2, & 5 Plastic Containers & Bottles with Caps</li>
-        <li>Glass Bottles (Any Color) & Jars with Lids</li>
-        <li>Aluminum cans, pie tins, & catering trays</li>
-        <li>Steel/tin Food Cans</li>
-        <li>Gable Top cartons (OJ, Milk, aseptic packaging)</li>
-        <li>Juice Boxes (TetraPak)</li>
-      </ul>
-    </div>
+    <v-sheet>
+      <div id="geocoder" class="geocoder-container mx-auto"></div>
+    </v-sheet>
+
+    <v-sheet class="side-info">
+      <div v-show="zone < 0">
+        <b>
+          Check your recycling schedule by:
+          <br>
+          <ul>
+            <li>Clicking the map</li>
+            <li>Entering your address in the box on the right</li>
+            <li>Clicking the geolocate icon (<svg
+                class="mapboxgl-ctrl-geocoder--icon mapboxgl-ctrl-geocoder--icon-geolocate" viewBox="0 0 18 18"
+                xml:space="preserve" width="18" height="18">
+                <path
+                  d="M12.999 3.677L2.042 8.269c-.962.403-.747 1.823.29 1.912l5.032.431.431 5.033c.089 1.037 1.509 1.252 1.912.29l4.592-10.957c.345-.822-.477-1.644-1.299-1.299z"
+                  fill="#4264fb"></path>
+              </svg>) in the box on the right
+            </li>
+          </ul>
+        </b>
+        <br>
+        Starting in January 2023, recycling materials will need to be separated into two categories for two distinct
+        pickups on alternating weeks. One week’s pickup will be exclusively for Fibers (cardboard, paper) and the
+        following week’s pickup will be for Commingled (plastic, glass, and metal containers). Cross-contaminated
+        recycling loads or materials put out on the wrong week will not be picked up. For more information on what
+        materials can and cannot be recycled, please reference the FAQ section at the bottom of this page. To download a
+        copy of the recycling guide, <a
+          href="https://www.maplewoodnj.gov/home/showpublisheddocument/984/638059490986930000">click here</a>.
+      </div>
+      <v-card variant="flat"  v-show="zone > 0">
+        <v-btn class="reset-btn" flat variant="outlined" append-icon="mdi-restart" rounded @click="reset()"> Reset</v-btn> 
+        <v-card variant="flat" class="outer-info-card" v-show="zone > 0">
+        The location you selected is in <b>Zone {{ zone }} </b>
+        <br>
+        Your next collection is
+        <span style="font-weight:bold;" v-show="nextCollectionWeek === nextWeek && !collectionIsToday">
+          next week on {{
+          daysOfWeek[collectionDays[zone]] }}
+        </span>
+        <span style="font-weight:bold;" v-show="nextCollectionWeek === thisWeek && !collectionIsToday">
+          this week on {{
+          daysOfWeek[collectionDays[zone]] }}
+        </span>
+        <span v-show="collectionIsToday">today.</span>
+        <div v-show="collectionType === 'F'">
+          <div class="type-of-week"> It is a <b>FIBER</b> week
+          <h4>(Cardboard & Paper)</h4>
+        </div>
+          <ul  class="item-list">
+        <li v-for="f in fiber" :key="f">
+          - {{ f }}
+          </li>
+          </ul>
+         
+        </div>
+        <div v-show="collectionType === 'C'">
+          <div class="type-of-week"> It is a <b>COMMINGLED</b> week
+          <h4>(Glass, Metal & Plastic)</h4></div>
+          <ul class="item-list">
+        <li v-for="f in mixed" :key="f">
+          - {{ f }}
+          </li>
+          </ul>
+        </div>
+      </v-card>
+      </v-card>
     </v-sheet>
   </div>
 </template>
@@ -60,7 +90,9 @@ import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import bpp from "@turf/boolean-point-in-polygon";
-import {polygon} from "@turf/helpers";
+import { polygon } from "@turf/helpers";
+import add from 'date-fns/add'
+
 import maplewood from "../assets/Maplewood_zones.json"//"https://gist.githubusercontent.com/Willjfield/12464b6bee6c21d40da3feb4bd0c42ca/raw/3c4a8cbfaab2198e6e00a6e22cc7ef83e98cb571/Maplewood-Zones.json"
 export default {
   components: {},
@@ -71,20 +103,37 @@ export default {
       model: null,
       map: null,
       type: '',
-      geoidHover: '',
+      geoidHover: -1,
       clickedId: '',
       selectedData: null,
       _keys: null,
       searching: false,
       hoverActive: true,
-      geocoder:null,
-      selectedAddress:{},
+      geocoder: null,
+      selectedAddress: {},
+      fiber: [
+        "Corrugated Cardboard (Flattened no packing materials)",
+        "Boxboard (Flattened cereal boxes etc)",
+        "Paper Bags",
+        "Junk Mail (Including window envelopes)",
+        "Office Paper",
+        "Newspapers & Magazines",
+        "Only Corrugated Brown Pizza Boxes (No grease. Food & liner removed)",
+      ],
+      mixed: [
+        "#1, 2, & 5 Plastic Containers & Bottles with Caps",
+        "Glass Bottles (Any Color) & Jars with Lids",
+        "Aluminum cans, pie tins, & catering trays",
+        "Steel/tin Food Cans",
+        "Gable Top cartons (OJ, Milk, aseptic packaging)",
+        "Juice Boxes (TetraPak)",
+      ],
       collectionType: "",
-      nextCollectionWeek:"",
+      nextCollectionWeek: "",
       collectionIsToday: false,
-      zone:-1,
-      daysOfWeek:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
-      collectionDays:[
+      zone: -1,
+      daysOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      collectionDays: [
         -1,
         1,
         1,
@@ -100,13 +149,24 @@ export default {
     this.mitt = inject("mitt");
     this.env = this.dataManager.env;
 
-    this.today = new Date().getDay();
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+      get: (searchParams, prop) => searchParams.get(prop),
+    });
 
-    this.thisWeek = new Date().getWeek();
-    this.nextWeek= this.thisWeek+1;
+    this.now;
 
-   // this.collectionType = this.thisWeek % 2 === 0 ? 'C' : 'F';
-    //console.log(this.collectionType)
+    if (params.year && params.week && params.day) {
+      this.now = new Date(params.year, params.week, params.day);
+    } else {
+      this.now = new Date();
+    }
+
+    this.today = this.now.getDay();
+
+    this.thisWeek = this.now.getWeek();
+
+    this.nextWeek = add(this.now, { weeks: 1 }).getWeek();
+
   },
   computed: {
 
@@ -138,67 +198,70 @@ export default {
     this.map = new ml.Map(config);
 
     const geocoderOpts = {
-      accessToken:  this.dataManager.mainConfig.api.keys.mapbox,
+      accessToken: this.dataManager.mainConfig.api.keys.mapbox,
       mapboxgl: mapboxgl,
       bbox: [-74.3031128519256, 40.71514165, -74.237198398, 40.764057727],
-      types:'address',
+      types: 'address',
       enableGeolocation: true,
-      placeholder:'Enter address or click arrow to geolocate'
+      placeholder: 'Enter address or click arrow to geolocate'
     }
 
     this.geocoder = new MapboxGeocoder(geocoderOpts)
-    .on('result',(res)=>{
-      console.log(res)
-      this.selectedAddress = res.result;
-    })
-    .on('clear',()=>{
-      this.selectedAddress={};
-    })
-    .addTo("#geocoder")
-    
+      .on('result', (res) => {
+        this.selectedAddress = res.result;
+      })
+      .on('clear', () => {
+        this.selectedAddress = {};
+      })
+      .addTo("#geocoder")
+
     this.map.addControl(new ml.NavigationControl(), "bottom-left");
     if (this.hoverActive) {
       this.map.on('mousemove', 'maplewood-zones', (e) => {
-       // console.log(e.features)
+        // console.log(e.features)
         if (e.features && e.features.length > 0 && self.geoidHover !== e.features[0].properties.id) {
           self.geoidHover = e.features[0].properties.id;
-          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.geoidHover], .85,["==", ["get", "id"], self.clickedId], .85, .5])
-          self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.geoidHover],4, ["==", ["get", "id"], self.clickedId],4, 2])
+          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.geoidHover], .85, ["==", ["get", "id"], self.clickedId], .85, .5])
+          self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.geoidHover], 4, ["==", ["get", "id"], self.clickedId], 4, 2])
 
         }
       });
 
       this.map.on('mouseleave', 'maplewood-zones', (e) => {
-        self.geoidHover = ''
-        self.map.setPaintProperty('maplewood-zone-outline', 'line-width',2)
+        self.geoidHover = -1;
+        self.map.setPaintProperty('maplewood-zone-outline', 'line-width', 2)
         self.map.setPaintProperty('maplewood-zones', 'fill-opacity', .75)
       });
     }
     this.map.on('click', 'maplewood-zones', (e) => {
       if (e.features && e.features.length > 0) {
-        if(this.marker) {
-        this.marker.remove();
-        this.marker = null;
-      }
+        if (this.marker) {
+          this.marker.remove();
+          this.marker = null;
+        }
 
-        self.setFromLngLat(e.lngLat.lng,e.lngLat.lat)
-       // self.clickedId = e.features[0].properties.id;
-          self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.clickedId], .85, .5])
-          self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.clickedId], 4, 2])
+        self.setFromLngLat(e.lngLat.lng, e.lngLat.lat)
+        // self.clickedId = e.features[0].properties.id;
+        self.map.setPaintProperty('maplewood-zones', 'fill-opacity', ["case", ["==", ["get", "id"], self.clickedId], .85, .5])
+        self.map.setPaintProperty('maplewood-zone-outline', 'line-width', ["case", ["==", ["get", "id"], self.clickedId], 4, 2])
       } else {
         self.clickedId = ''
-        self.map.setPaintProperty('maplewood-zone-outline', 'line-width',2)
+        self.map.setPaintProperty('maplewood-zone-outline', 'line-width', 2)
         self.map.setPaintProperty('maplewood-zones', 'fill-opacity', .75)
       }
     });
 
   },
   methods: {
-    reset(){
-      this.zone=-1
+    reset() {
+      this.zone = -1
       this.nextCollectionWeek = false;
       this.collectionIsToday = false;
       this.collectionType = ""
+      if (this.marker) {
+        this.marker.remove();
+        this.marker = null;
+      }
     },
     getColor(val, type) {
       const scale = this.dataManager.colorConfig[type];
@@ -222,39 +285,41 @@ export default {
 
       this.map.setPaintProperty("tracts", "fill-color", matchExpression);
     },
-    setFromLngLat(lng,lat){
-      maplewood.features.forEach((f)=>{
+    setFromLngLat(lng, lat) {
+      maplewood.features.forEach((f) => {
         let poly = polygon(f.geometry.coordinates[0]);
-        if(bpp([lng, lat], poly)){
+        if (bpp([lng, lat], poly)) {
           this.zone = f.properties.id;
         }
       });
 
       this.nextCollectionWeek = this.today > this.collectionDays[this.zone] ? this.nextWeek : this.thisWeek;
+      console.log(this.nextCollectionWeek)
       this.collectionIsToday = this.today === this.collectionDays[this.zone];
 
       this.collectionType = this.nextCollectionWeek % 2 === 0 ? 'C' : 'F';
-      
+
       this.marker = new ml.Marker({
-      color: "#FFFFFF",
-      draggable: true
+        color: "#FFFFFF",
+        draggable: true
       }).setLngLat([lng, lat])
-      .addTo(this.map);
+        .addTo(this.map);
 
       this.map.flyTo({
-      // These options control the ending camera position: centered at
-      // the target, at zoom level 9, and north up.
-      center: [lng,lat],
-      zoom: 16})
-    
+        // These options control the ending camera position: centered at
+        // the target, at zoom level 9, and north up.
+        center: [lng, lat],
+        zoom: 16
+      })
+
     }
   },
   watch: {
     model(_var) {
 
     },
-    selectedAddress(_val){
-      if(this.marker) {
+    selectedAddress(_val) {
+      if (this.marker) {
         this.marker.remove();
         this.marker = null;
       }
@@ -266,6 +331,15 @@ export default {
 </script>
 
 <style>
+
+.type-of-week{
+  text-align: center;
+    padding: 15px 0;
+}
+.outer-info-card{
+  clear: both;
+  padding-top: 4%;
+}
 .above-map {
   z-index: 1;
   float: right;
@@ -278,14 +352,14 @@ export default {
 
 #main-map {
   position: absolute;
-  top: 10%;
+  top: 5%;
   bottom: 0;
   left: 33%;
   right: 0%;
   z-index: -1;
 }
 
-#main-map div.maplibregl-canvas-container.mapboxgl-canvas-container{
+#main-map div.maplibregl-canvas-container.mapboxgl-canvas-container {
   cursor: crosshair;
 }
 
@@ -326,32 +400,53 @@ export default {
   overflow: scroll;
 }
 
-.geocoder-container{
+.geocoder-container {
   float: right;
-    margin: 5px;
+  margin: 5px;
 }
 
-.mapboxgl-ctrl-geocoder.mapboxgl-ctrl{
+.mapboxgl-ctrl-geocoder.mapboxgl-ctrl {
   width: 100%;
-    min-width: 355px;
-    margin: 5px;
+  min-width: 355px;
+  margin: 5px;
 }
 
-.title{
+.title {
   text-align: center;
   background: white;
+  height: 40px;
 }
 
-.side-info{
+.side-info {
   position: absolute;
-    top: 50px;
-    bottom: 0;
-    padding: 40px;
-    width: 33%;
-    overflow-y: scroll;
+  top: 40px;
+  bottom: 0;
+  padding: 0 40px;
+  width: 33%;
+  overflow-y: auto;
 }
 
-.reset-btn{
+.reset-btn {
   float: right;
+}
+
+#hover-popup {
+  position: absolute;
+  left: 10px;
+  top: 18px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 5px;
+  font-size: large;
+  border: 1px solid black;
+}
+
+.hover-note{
+  font-size: medium;
+}
+
+.small-hover-note{
+  font-size: small;
+  font-style: italic;
 }
 </style>
