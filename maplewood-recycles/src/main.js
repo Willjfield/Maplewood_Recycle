@@ -13,6 +13,22 @@ const app = createApp(App).use(vuetify);
 app.provide('mitt',mitt());
 app.provide('dataManager',new DataManager());
 
+if(window.innerHeight > window.innerWidth){
+    console.log('portrait')
+    document.body.classList.add('portrait');
+}
+
+window.addEventListener("resize", (event) => {
+    if(window.innerHeight > window.innerWidth && !document.body.classList.contains('portrait')){
+        document.body.classList.add('portrait');
+    }
+
+    if(window.innerHeight < window.innerWidth && document.body.classList.contains('portrait')){
+        document.body.classList.remove('portrait');
+    }
+});
+
+
 function tryParseJSON (jsonString){
     try {
         var o = JSON.parse(jsonString);
