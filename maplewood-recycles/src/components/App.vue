@@ -17,6 +17,8 @@
     </v-sheet>
 
     <v-sheet class="side-info">
+      <p class="disclaimer">This is an independent site not affiliated with Maplewood DPW. If you notice and errors, please email <a href="mailto:wijfi@duck.com">wijfi@duck.com</a></p>
+<v-divider></v-divider>
       <div v-show="zone < 0">
         <b>
           Check your recycling schedule by:
@@ -450,6 +452,11 @@ export default {
   font-style: italic;
 }
 
+.disclaimer{
+  font-size: small;
+  line-height: 1;
+  padding:5px 0px;
+}
 </style>
 <style>
 .portrait #main-map{
