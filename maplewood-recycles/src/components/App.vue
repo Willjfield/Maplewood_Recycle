@@ -449,4 +449,23 @@ export default {
   font-size: small;
   font-style: italic;
 }
+
+</style>
+<style>
+.portrait #main-map{
+  left:0;
+  right:0;
+  bottom: 50%;
+}
+
+.portrait .side-info{
+  top:50%;
+  right: 0;
+  left: 0;
+  width: 100%;
+}
+
+.portrait #hover-popup {
+  display: none;
+}
 </style>
