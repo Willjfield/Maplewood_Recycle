@@ -1,4 +1,5 @@
 <template>
+  <Modal></Modal>
   <div class="title">
     <h2 style="color:#44744c;">Maplewood Recycling</h2>
     <!-- <h4>When? What? How?</h4> -->
@@ -17,8 +18,10 @@
     </v-sheet>
 
     <v-sheet class="side-info">
-      <p class="disclaimer">This is an independent site not affiliated with Maplewood DPW. If you notice and errors, please email <a href="mailto:wijfi@duck.com">wijfi@duck.com</a></p>
-<v-divider></v-divider>
+      <p class="disclaimer">This is an independent site not affiliated with Maplewood DPW. If you notice and errors or have comments please email <a href="mailto:wijfi@duck.com">wijfi@duck.com</a></p>
+      <p class="disclaimer">This does <b>NOT</b> take into account changes to the regular schedule (holidays, inclement weather, etc.) <a href="https://www.maplewoodnj.gov/government/public-works/recycling-and-waste-disposal" target="_blank">Please check the DPW website for updates.</a></p>
+
+      <v-divider></v-divider>
       <div v-show="zone < 0">
         <b>
           Check your recycling schedule by:
@@ -94,10 +97,12 @@ import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import bpp from "@turf/boolean-point-in-polygon";
 import { polygon } from "@turf/helpers";
 import add from 'date-fns/add'
-
+import Modal from './Modal.vue'
 import maplewood from "../assets/Maplewood_zones.json"//"https://gist.githubusercontent.com/Willjfield/12464b6bee6c21d40da3feb4bd0c42ca/raw/3c4a8cbfaab2198e6e00a6e22cc7ef83e98cb571/Maplewood-Zones.json"
 export default {
-  components: {},
+  components: {
+    Modal
+  },
   data() {
     return {
       data: null,
