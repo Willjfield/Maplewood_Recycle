@@ -5,16 +5,16 @@ name: deploy-dev
 
 on:
   push:
-    branches: [ "deploy-dev" ]
+    branches: [ "deploy" ]
 
 jobs:
   build:
 
-    runs-on: self-hosted-dev
+    runs-on: self-hosted
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x,19.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -26,6 +26,4 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '**/package-lock.json'
     - run: npm ci
-    - run: npm run build-for-dev --if-present
-    - run: $FileName = "build-dev\web.config"; if (Test-Path $FileName) { Remove-Item -Verbose -Force $FileName };
-    - run: ren build-dev\ww13cv-web.config web.config
+    - run: npm run build --if-present
